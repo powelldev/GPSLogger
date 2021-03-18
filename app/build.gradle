@@ -24,7 +24,25 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled false
+            debuggable true
+            applicationIdSuffix ".debug"
+        }
     }
+
+    flavorDimensions "AUDIENCE"
+    productFlavors {
+        dev {
+            dimension "AUDIENCE"
+            applicationId "com.fireminder.gpslogger.dev"
+        }
+        production {
+            dimension "AUDIENCE"
+            applicationId "com.fireminder.gpslogger"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
