@@ -1,17 +1,14 @@
 package com.fireminder.gpslogger
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
+import com.fireminder.gpslogger.LoggingToggleButton.State
 import com.fireminder.gpslogger.databinding.SimpleViewScreenBinding
+import java.lang.IllegalArgumentException
 
 class SimpleViewActivity : AppCompatActivity() {
 
@@ -22,35 +19,31 @@ class SimpleViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = SimpleViewScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         viewModel = ViewModelProvider(this)[SimpleViewViewModel::class.java]
 
-        binding.loggingToggleButton.setOnClickListener {
-            viewModel.onToggleButtonClicked()
-        }
-        viewModel.toggleButtonState().observe(this) { state ->
-            when (state) {
-                LoggingToggleButton.State.STARTED_LOGGED -> binding.loggingToggleButton.startLogging()
-                LoggingToggleButton.State.STOPPED_LOGGING -> binding.loggingToggleButton.stopLogging()
-                else -> TODO()
-            }
-        }
+        binding.loggingToggleButton.onAttach(viewModel)
+    }
 
+    override fun onDestroy() {
+        binding.loggingToggleButton.onDetach()
+        super.onDestroy()
     }
 
 }
 
 class SimpleViewViewModel : ViewModel() {
-    private val toggleButtonState: MutableLiveData<LoggingToggleButton.State> by lazy {
-        MutableLiveData<LoggingToggleButton.State>(LoggingToggleButton.State.STOPPED_LOGGING)
+    private val toggleButtonState: MutableLiveData<State> by lazy {
+        MutableLiveData<State>(State.STOPPED_LOGGING)
     }
 
-    fun toggleButtonState(): LiveData<LoggingToggleButton.State> = toggleButtonState
+    fun toggleButtonState(): LiveData<State> = toggleButtonState
 
     fun onToggleButtonClicked() {
+        toggleButtonState.value =
         when (toggleButtonState.value) {
-            LoggingToggleButton.State.STARTED_LOGGED -> toggleButtonState.value = LoggingToggleButton.State.STOPPED_LOGGING
-            LoggingToggleButton.State.STOPPED_LOGGING -> toggleButtonState.value = LoggingToggleButton.State.STARTED_LOGGED
+            State.STARTED_LOGGED -> State.STOPPED_LOGGING
+            State.STOPPED_LOGGING -> State.STARTED_LOGGED
+            else -> throw IllegalArgumentException("$toggleButtonState value was null.")
         }
     }
 }
