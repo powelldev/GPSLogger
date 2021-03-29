@@ -15,7 +15,7 @@
         tools:text="40° 26.767′ N 79° 58.933′ W"
         tools:ignore="UnusedAttribute" />
 
-    <com.fireminder.gpslogger.LoggingToggleButton
+    <Button
         android:id="@+id/logging_toggle_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/grid_6"

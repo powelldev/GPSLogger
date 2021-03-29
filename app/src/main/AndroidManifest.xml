@@ -19,6 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name="com.fireminder.gps.GpsLogService"
+            android:foregroundServiceType="location">
+        </service>
     </application>
 
 </manifest>
